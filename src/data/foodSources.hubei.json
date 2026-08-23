@@ -1,0 +1,40 @@
+{
+  "method": "公开网页检索，记录平台可访问的标题、播放量和链接；需要登录或动态加载的平台仅保留搜索入口，不猜测热度。",
+  "checkedAt": "2026-08-20",
+  "platforms": {
+    "bilibili": { "label": "B站", "status": "public-search", "note": "可读取公开搜索结果中的标题、播放量和链接" },
+    "xiaohongshu": { "label": "小红书", "status": "login-required", "note": "搜索页要求登录，页面内不展示未验证热度" },
+    "zhihu": { "label": "知乎", "status": "dynamic-or-login", "note": "公开搜索入口可用，结果列表可能要求登录或动态加载" },
+    "douyin": { "label": "抖音", "status": "dynamic-search", "note": "搜索页可打开，结果和播放量由平台动态加载" }
+  },
+  "dishEvidence": {
+    "热干面": [
+      { "platform": "bilibili", "title": "《盘点武汉必吃的十大美食》", "metric": "4.7万播放", "url": "https://www.bilibili.com/video/BV1Kc411J7Yi/" }
+    ],
+    "黄石港饼": [
+      { "platform": "bilibili", "title": "黄石港饼名食的由来", "metric": "1029播放", "url": "https://www.bilibili.com/video/BV1Hh4y1Z7vH/" },
+      { "platform": "bilibili", "title": "黄石港饼哪家强？益朵、锦江、食博园、牧羊湖", "metric": "698播放", "url": "https://www.bilibili.com/video/BV1Ey421Y7K3/" }
+    ],
+    "襄阳牛油面": [
+      { "platform": "bilibili", "title": "来襄阳只干一件事，吃正宗襄阳牛肉面～量大肉足，牛油爆香。", "metric": "28.9万播放", "url": "https://www.bilibili.com/video/BV1wr421w7ES/" },
+      { "platform": "bilibili", "title": "来襄阳吃的正宗牛肉面，在一桥头，13一碗，黄酒2元", "metric": "2035播放", "url": "https://www.bilibili.com/video/BV1EJ411m7AJ/" }
+    ],
+    "钟祥蟠龙菜": [
+      { "platform": "bilibili", "title": "国家非遗美食，蟠龙菜", "metric": "6519播放", "url": "https://www.bilibili.com/video/BV1bf4y1W7hN/" },
+      { "platform": "bilibili", "title": "皇帝亲自命名的菜-蟠龙菜", "metric": "2698播放", "url": "https://www.bilibili.com/video/BV1My4y1Y7FX/" }
+    ],
+    "潜江油焖大虾": [
+      { "platform": "bilibili", "title": "潜江美食·攻略合集", "metric": "3661播放", "url": "https://www.bilibili.com/video/BV1nM411Q7cX/" },
+      { "platform": "bilibili", "title": "湖北潜江最牛馆子，30年无招牌，藏小巷挤破头", "metric": "9632播放", "url": "https://www.bilibili.com/video/BV1YK4y197np/" }
+    ],
+    "沔阳三蒸": [
+      { "platform": "bilibili", "title": "湖北仙桃地方美食公开检索结果", "metric": "78.9万播放", "url": "https://www.bilibili.com/video/BV1r64y1p7gA/" }
+    ],
+    "恩施合渣": [
+      { "platform": "bilibili", "title": "恩施特色美食公开检索结果", "metric": "8.2万播放", "url": "https://www.bilibili.com/video/BV1dZ421M72N/" }
+    ],
+    "天门蒸菜": [
+      { "platform": "bilibili", "title": "湖北天门十大美食排行榜", "metric": "5837播放", "url": "https://www.bilibili.com/video/BV1VP411b7uA/" }
+    ]
+  }
+}

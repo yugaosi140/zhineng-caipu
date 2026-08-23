@@ -1,0 +1,23 @@
+{
+  "note": "湖北 17 个市州/直管市/林区。海拔以 Open-Meteo 返回的 elevation 为准，nominalElevation 仅作离线兜底提示。",
+  "default": "wuhan",
+  "cities": [
+    { "id": "wuhan", "name": "武汉", "lat": 30.5928, "lon": 114.3055, "nominalElevation": 25 },
+    { "id": "huangshi", "name": "黄石", "lat": 30.2001, "lon": 115.0389, "nominalElevation": 30 },
+    { "id": "shiyan", "name": "十堰", "lat": 32.6475, "lon": 110.7879, "nominalElevation": 380 },
+    { "id": "yichang", "name": "宜昌", "lat": 30.6919, "lon": 111.2865, "nominalElevation": 55 },
+    { "id": "xiangyang", "name": "襄阳", "lat": 32.009, "lon": 112.122, "nominalElevation": 70 },
+    { "id": "ezhou", "name": "鄂州", "lat": 30.391, "lon": 114.895, "nominalElevation": 25 },
+    { "id": "jingmen", "name": "荆门", "lat": 31.0354, "lon": 112.1994, "nominalElevation": 90 },
+    { "id": "xiaogan", "name": "孝感", "lat": 30.9245, "lon": 113.9266, "nominalElevation": 30 },
+    { "id": "jingzhou", "name": "荆州", "lat": 30.3269, "lon": 112.241, "nominalElevation": 32 },
+    { "id": "huanggang", "name": "黄冈", "lat": 30.4536, "lon": 114.8794, "nominalElevation": 25 },
+    { "id": "xianning", "name": "咸宁", "lat": 29.8412, "lon": 114.3225, "nominalElevation": 40 },
+    { "id": "suizhou", "name": "随州", "lat": 31.6902, "lon": 113.3826, "nominalElevation": 90 },
+    { "id": "enshi", "name": "恩施", "lat": 30.2721, "lon": 109.4881, "nominalElevation": 450 },
+    { "id": "xiantao", "name": "仙桃", "lat": 30.3624, "lon": 113.4536, "nominalElevation": 28 },
+    { "id": "qianjiang", "name": "潜江", "lat": 30.4213, "lon": 112.899, "nominalElevation": 30 },
+    { "id": "tianmen", "name": "天门", "lat": 30.6534, "lon": 113.166, "nominalElevation": 30 },
+    { "id": "shennongjia", "name": "神农架", "lat": 31.7443, "lon": 110.6757, "nominalElevation": 1700 }
+  ]
+}

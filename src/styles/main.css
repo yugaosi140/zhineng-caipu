@@ -1,0 +1,327 @@
+/* 楚膳 — 全局样式。
+   配色取湖北的水与藕：青灰底、藕白卡片、菱红点缀。
+   对比度按 WCAG AA 校对（正文 ≥4.5:1，大字 ≥3:1）。 */
+
+:root {
+  --bg: #f4f6f5;
+  --surface: #ffffff;
+  --surface-2: #eef1f0;
+  --line: #d9dfdd;
+  --text: #1f2937;
+  --text-dim: #57635f;
+  --text-faint: #78837f;
+
+  --accent: #0f6e5c;
+  --accent-dim: #d5e8e3;
+  --warn: #9a5b16;
+  --warn-bg: #fbf0df;
+  --danger: #a32c2c;
+  --danger-bg: #fbe9e9;
+
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.06), 0 4px 12px rgba(16, 24, 40, 0.05);
+
+  --font: system-ui, -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei',
+    'Hiragino Sans GB', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14181a;
+    --surface: #1d2325;
+    --surface-2: #262d30;
+    --line: #333c40;
+    --text: #e8edeb;
+    --text-dim: #b0bab6;
+    --text-faint: #8b9591;
+
+    --accent: #5fc7ae;
+    --accent-dim: #1c3b35;
+    --warn: #e0a869;
+    --warn-bg: #382c18;
+    --danger: #e88a8a;
+    --danger-bg: #3a2020;
+
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+/* 键盘焦点始终可见 */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* 仅供屏幕阅读器 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.app {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 24px 20px 64px;
+}
+
+.app-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.app-title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+.app-sub {
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+.app-note {
+  color: var(--text-faint);
+  font-size: 12.5px;
+  margin: 0 0 20px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+}
+
+.card + .card {
+  margin-top: 14px;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 650;
+  margin: 0;
+}
+
+/* 主按钮 */
+.btn {
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: filter 0.15s;
+}
+
+.btn:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+@media (prefers-color-scheme: dark) {
+  .btn {
+    color: #0c1a17;
+  }
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--accent);
+  border-color: var(--line);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: var(--accent-dim);
+}
+
+/* 三档分段控件 */
+.seg {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.seg button {
+  background: var(--surface);
+  color: var(--text-dim);
+  border: 0;
+  padding: 7px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.12s;
+}
+
+.seg button + button {
+  border-left: 1px solid var(--line);
+}
+
+.seg button:hover:not([aria-pressed='true']) {
+  background: var(--surface-2);
+}
+
+.seg button[aria-pressed='true'] {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 650;
+}
+
+@media (prefers-color-scheme: dark) {
+  .seg button[aria-pressed='true'] {
+    color: #0c1a17;
+  }
+}
+
+/* 徽标 */
+.tag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.7;
+  background: var(--surface-2);
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.tag-good {
+  background: var(--accent-dim);
+  color: var(--accent);
+}
+
+.tag-warn {
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+
+.tag-muted {
+  background: var(--surface-2);
+  color: var(--text-faint);
+}
+
+.alert {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid currentColor;
+}
+
+.alert-warn {
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+
+.muted {
+  color: var(--text-dim);
+}
+
+.faint {
+  color: var(--text-faint);
+  font-size: 12.5px;
+}
+
+.controls-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.field-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+select,
+input[type='number'] {
+  font: inherit;
+  font-size: 14px;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+}
+
+/* 三餐栅格 */
+.meals {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 14px;
+}
+
+@media (max-width: 860px) {
+  .meals {
+    grid-template-columns: 1fr;
+  }
+  .controls-row {
+    gap: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
