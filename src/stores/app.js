@@ -87,6 +87,7 @@ export const plan = computed(() => {
     priceTable: priceTable.value,
     wealth: state.wealth,
     difficulty: state.difficulty,
+    cityId: state.cityId,
     seedSalt: `${state.cityId}:${new Date().toISOString().slice(0, 10)}`,
   })
 })

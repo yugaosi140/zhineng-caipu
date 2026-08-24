@@ -148,11 +148,14 @@ export function buildCandidates(dishes, { meal, difficulty = 'mid', minCount = 3
 }
 
 /** 打分并排序。 */
-export function rankDishes(pool, { ctx, demand, priceTable, wealth = 'mid', meal, seedSalt = '' }) {
+export function rankDishes(
+  pool,
+  { ctx, demand, priceTable, wealth = 'mid', meal, cityId = '', seedSalt = '' },
+) {
   const mealRule = MEAL_RULES[meal] ?? null
   return pool
     .map((dish) => {
-      const scored = scoreDish(dish, { ctx, demand, priceTable, wealth, mealRule, seedSalt })
+      const scored = scoreDish(dish, { ctx, demand, priceTable, wealth, mealRule, cityId, seedSalt })
       return { ...scored, reason: buildReason(scored) }
     })
     .sort((a, b) => b.total - a.total)
@@ -228,8 +231,11 @@ export function recommendMeal(dishes, opts) {
 }
 
 /** 一天三餐。中餐输出组合，早晚餐输出候选列表。 */
-export function planDay(dishes, { ctx, demand, priceTable, wealth = 'mid', difficulty = 'mid', seedSalt = '' }) {
-  const base = { ctx, demand, priceTable, wealth, seedSalt, difficulty }
+export function planDay(
+  dishes,
+  { ctx, demand, priceTable, wealth = 'mid', difficulty = 'mid', cityId = '', seedSalt = '' },
+) {
+  const base = { ctx, demand, priceTable, wealth, difficulty, cityId, seedSalt }
 
   const breakfast = recommendMeal(dishes, { ...base, meal: 'breakfast', limit: 3 })
   const lunch = recommendMeal(dishes, { ...base, meal: 'lunch', limit: 3 })

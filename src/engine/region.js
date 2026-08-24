@@ -1,7 +1,18 @@
 /**
- * 湖北地域口味与代表菜加权。
- * 城市是推荐上下文的一部分：天气决定“适不适合现在吃”，地域决定“是不是这里该吃的”。
+ * 湖北地域加权。
+ *
+ * 城市是推荐上下文的一部分：天气决定"适不适合现在吃"，地域决定"是不是这里该吃的"。
+ *
+ * 加权分两层：
+ *   1. 代表菜（specialty）—— 明确公认的本地招牌，加权最强
+ *   2. 同地归属（region）—— 菜谱 region 字段落在该市辖内，轻度加权
+ *
+ * 分值刻意压在 ±1 以内。环境契合分单维贡献约 ±1，若地域分给到 2 以上，
+ * 武汉的早餐会永远是那六样，天气引擎就白做了。地域应该是"同分时优先本地"，
+ * 而不是"本地一票通过"。
  */
+
+/** 市州代表菜。名称必须和 dishes.hubei.json 里的 name 完全一致。 */
 const CITY_SPECIALTIES = {
   wuhan: ['热干面', '三鲜豆皮', '糊汤粉', '面窝', '欢喜坨', '重油烧梅'],
   huangshi: ['黄石港饼'],
@@ -19,36 +30,99 @@ const CITY_SPECIALTIES = {
   xiantao: ['沔阳三蒸'],
   qianjiang: ['油焖大虾'],
   tianmen: ['珍珠圆子', '粉蒸排骨'],
-  shennongjia: ['山药排骨汤', '腊肉']
+  shennongjia: ['山药排骨汤'],
 }
 
 const CITY_LABELS = {
-  wuhan: '武汉特色',
-  huangshi: '黄石特色',
-  shiyan: '十堰特色',
-  yichang: '宜昌特色',
-  xiangyang: '襄阳特色',
-  ezhou: '鄂州特色',
-  jingmen: '荆门特色',
-  xiaogan: '孝感特色',
-  jingzhou: '荆州及公安特色',
-  huanggang: '黄冈特色',
-  xianning: '咸宁特色',
-  suizhou: '随州特色',
-  enshi: '恩施特色',
-  xiantao: '仙桃特色',
-  qianjiang: '潜江特色',
-  tianmen: '天门特色',
-  shennongjia: '神农架特色',
+  wuhan: '武汉',
+  huangshi: '黄石',
+  shiyan: '十堰',
+  yichang: '宜昌',
+  xiangyang: '襄阳',
+  ezhou: '鄂州',
+  jingmen: '荆门',
+  xiaogan: '孝感',
+  jingzhou: '荆州',
+  huanggang: '黄冈',
+  xianning: '咸宁',
+  suizhou: '随州',
+  enshi: '恩施',
+  xiantao: '仙桃',
+  qianjiang: '潜江',
+  tianmen: '天门',
+  shennongjia: '神农架',
 }
 
+/**
+ * 菜谱 region 字段 → 市州 id。
+ *
+ * 数据里有三个区县级归属（黄陂属武汉，公安和洪湖属荆州），
+ * 只按市名匹配会漏掉它们，所以显式列出。
+ */
+const REGION_TO_CITY = {
+  武汉: 'wuhan',
+  黄陂: 'wuhan',
+  黄石: 'huangshi',
+  十堰: 'shiyan',
+  宜昌: 'yichang',
+  襄阳: 'xiangyang',
+  鄂州: 'ezhou',
+  荆门: 'jingmen',
+  孝感: 'xiaogan',
+  荆州: 'jingzhou',
+  公安: 'jingzhou',
+  洪湖: 'jingzhou',
+  黄冈: 'huanggang',
+  咸宁: 'xianning',
+  随州: 'suizhou',
+  恩施: 'enshi',
+  仙桃: 'xiantao',
+  潜江: 'qianjiang',
+  天门: 'tianmen',
+  神农架: 'shennongjia',
+}
+
+/** 代表菜加权。早餐地方特色最鲜明，晚餐最弱。 */
+const SPECIALTY_WEIGHT = { breakfast: 0.9, lunch: 0.7, dinner: 0.4 }
+
+/** 同地归属加权，比代表菜低一档。 */
+const SAME_REGION_WEIGHT = { breakfast: 0.35, lunch: 0.3, dinner: 0.2 }
+
+/** 菜谱归属的市州 id，无法归类时返回 null。 */
+export function cityOfDish(dish) {
+  return REGION_TO_CITY[dish?.region] ?? null
+}
+
+/**
+ * 地域契合分。
+ *
+ * @param {object} dish
+ * @param {object} [opts]
+ * @param {string} [opts.cityId] 当前选中的市州 id
+ * @param {string} [opts.meal]   breakfast|lunch|dinner
+ * @returns {{score:number, note:string, kind:'specialty'|'same-region'|'none'}}
+ */
 export function regionalFit(dish, { cityId = '', meal = '' } = {}) {
-  const specialties = CITY_SPECIALTIES[cityId] ?? []
-  if (!specialties.includes(dish.name)) return { score: 0, note: '' }
+  const label = CITY_LABELS[cityId]
+  if (!label) return { score: 0, note: '', kind: 'none' }
 
-  // 早餐地方代表性最强；午餐仍明显加权；晚餐保留较温和的地方偏好。
-  const score = meal === 'breakfast' ? 2.4 : meal === 'lunch' ? 1.8 : 0.8
-  return { score, note: `${CITY_LABELS[cityId] ?? '本地'} · ${dish.name}` }
+  if ((CITY_SPECIALTIES[cityId] ?? []).includes(dish.name)) {
+    return {
+      score: SPECIALTY_WEIGHT[meal] ?? 0.4,
+      note: `${label}代表菜`,
+      kind: 'specialty',
+    }
+  }
+
+  if (cityOfDish(dish) === cityId) {
+    return {
+      score: SAME_REGION_WEIGHT[meal] ?? 0.2,
+      note: `${label}本地菜`,
+      kind: 'same-region',
+    }
+  }
+
+  return { score: 0, note: '', kind: 'none' }
 }
 
-export { CITY_SPECIALTIES }
+export { CITY_SPECIALTIES, CITY_LABELS, REGION_TO_CITY }

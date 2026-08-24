@@ -12,6 +12,7 @@
 
 import { DIMENSIONS, altitudePenalty } from './demand.js'
 import { estimateDishCost, costFit } from './cost.js'
+import { regionalFit } from './region.js'
 
 /** 属性值中心化：0 → -0.5，1 → +0.5。 */
 function centered(v) {
@@ -68,7 +69,7 @@ export function environmentScore(dish, weights) {
  * 只取正贡献，且按绝对值排序，最多 2 条 —— 理由太多反而没说服力。
  */
 export function explainContributions(contributions, limit = 2) {
-    const positive = contributions
+  const positive = contributions
     .filter((c) => c.gain > 0.08)
     .sort((a, b) => b.gain - a.gain)
     .slice(0, limit)
@@ -91,13 +92,18 @@ export function explainContributions(contributions, limit = 2) {
  * @param {object} params.priceTable 价格表
  * @param {string} params.wealth     low|mid|high
  * @param {object} [params.mealRule] 餐段规则（plan.js 提供）
+ * @param {string} [params.cityId]   当前选中市州，用于地域加权
  * @param {string} [params.seedSalt] 抖动盐（通常是日期+城市）
  */
-export function scoreDish(dish, { ctx, demand, priceTable, wealth = 'mid', mealRule = null, seedSalt = '' }) {
+export function scoreDish(
+  dish,
+  { ctx, demand, priceTable, wealth = 'mid', mealRule = null, cityId = '', seedSalt = '' },
+) {
   const env = environmentScore(dish, demand.weights)
   const cost = estimateDishCost(dish, priceTable)
   const fit = costFit(cost.perServing, wealth)
   const altPenalty = altitudePenalty(ctx, dish)
+  const region = regionalFit(dish, { cityId, meal: mealRule?.key ?? '' })
 
   const mealScore = mealRule ? mealRule.score(dish, ctx) : 0
   const mealNotes = mealRule ? mealRule.notes(dish, ctx) : []
@@ -106,7 +112,9 @@ export function scoreDish(dish, { ctx, demand, priceTable, wealth = 'mid', mealR
   const jitter = (stableJitter(dish.id + seedSalt) - 0.5) * 0.3
 
   const total =
-    Math.round((env.score + mealScore + fit.score + altPenalty + jitter) * 1000) / 1000
+    Math.round(
+      (env.score + mealScore + fit.score + region.score + altPenalty + jitter) * 1000,
+    ) / 1000
 
   return {
     dish,
@@ -115,11 +123,13 @@ export function scoreDish(dish, { ctx, demand, priceTable, wealth = 'mid', mealR
       environment: Math.round(env.score * 1000) / 1000,
       meal: Math.round(mealScore * 1000) / 1000,
       cost: Math.round(fit.score * 1000) / 1000,
+      region: Math.round(region.score * 1000) / 1000,
       altitude: altPenalty,
       jitter: Math.round(jitter * 1000) / 1000,
     },
     cost,
     costFit: fit,
+    region,
     contributions: env.contributions,
     highlights: explainContributions(env.contributions),
     mealNotes,
@@ -149,6 +159,10 @@ export function difficultyAllowed(dish, level) {
 export function buildReason(scored) {
   const parts = []
 
+  // 地域理由放最前：用户选了市州，最想先看到"这是本地菜"
+  if (scored.region?.kind === 'specialty') {
+    parts.push(scored.region.note)
+  }
   if (scored.highlights.length) {
     parts.push(`推荐${scored.highlights.join('、')}的菜`)
   }
