@@ -12,6 +12,7 @@ import WeatherPanel from './components/WeatherPanel.vue'
 import PricePanel from './components/PricePanel.vue'
 import PrefControls from './components/PrefControls.vue'
 import MealCard from './components/MealCard.vue'
+import DayPlanPanel from './components/DayPlanPanel.vue'
 import RecipeDrawer from './components/RecipeDrawer.vue'
 
 const MEAL_HINTS = {
@@ -58,6 +59,8 @@ onMounted(() => initializeApp())
         点任意一道菜查看完整菜谱。成本按食材估算，不含调味料和燃气；
         营养值为估算值。菜谱为家常做法参考。
       </p>
+
+      <DayPlanPanel />
     </section>
 
     <section v-else class="card empty">

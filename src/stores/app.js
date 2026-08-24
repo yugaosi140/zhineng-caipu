@@ -14,6 +14,7 @@ import { loadPrices, loadManualPrices, saveManualPrices } from '../api/price.js'
 import { buildContext, describeContext } from '../engine/context.js'
 import { buildDemand } from '../engine/demand.js'
 import { planDay } from '../engine/plan.js'
+import { buildShoppingList, summarizeNutrition, assessNutrition } from '../engine/shopping.js'
 
 const LS_PREFS = 'chushan:prefs'
 
@@ -90,6 +91,46 @@ export const plan = computed(() => {
     cityId: state.cityId,
     seedSalt: `${state.cityId}:${new Date().toISOString().slice(0, 10)}`,
   })
+})
+
+/**
+ * 今日实际要做的菜。
+ *
+ * 推荐列表里每餐给的是候选，但采购和营养要算的是"真的会做的那几道"：
+ * 早晚各取重点推荐一道，中餐取组合出的整套（主菜+素菜+汤）。
+ * 一天 5 道菜是家庭常态，把 9 道候选全算进采购清单没有意义。
+ */
+export const dayDishes = computed(() => {
+  if (!plan.value) return []
+  const picks = [
+    ...plan.value.breakfast.items.slice(0, 1),
+    ...plan.value.lunch.items,
+    ...plan.value.dinner.items.slice(0, 1),
+  ]
+  // 同一道菜可能同时出现在中餐组合和晚餐里，按 id 去重
+  const seen = new Set()
+  return picks.filter((item) => {
+    if (seen.has(item.dish.id)) return false
+    seen.add(item.dish.id)
+    return true
+  })
+})
+
+/** 采购清单：按类别归并同名配料。 */
+export const shoppingList = computed(() =>
+  dayDishes.value.length
+    ? buildShoppingList(
+      dayDishes.value.map((item) => item.dish),
+      priceTable.value,
+    )
+    : null,
+)
+
+/** 当日营养汇总 + 参考值对照。 */
+export const nutritionSummary = computed(() => {
+  if (!dayDishes.value.length) return null
+  const totals = summarizeNutrition(dayDishes.value.map((item) => item.dish))
+  return { totals, compare: assessNutrition(totals) }
 })
 
 /* ------------------------------------------------------------------ 动作 */
