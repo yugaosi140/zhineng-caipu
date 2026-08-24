@@ -1,0 +1,15 @@
+# CONTRIBUTING.md 写的「两空格缩进、LF 换行」在这里落成编辑器配置，
+# 免得每个人靠记性维持风格。
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Markdown 里行尾两个空格是换行语法，不能删
+[*.md]
+trim_trailing_whitespace = false

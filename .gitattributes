@@ -1,0 +1,16 @@
+# 仓库里统一存 LF。不加这个，Windows 和 Linux 的贡献者会互相刷出整文件 diff
+# —— 明明只改了一行，PR 里却显示全文重写。
+* text=auto eol=lf
+
+# 二进制文件不做换行转换，也不参与文本 diff
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+
+# 锁文件由 npm 生成，diff 又长又没有阅读价值，在 GitHub 上折叠起来
+package-lock.json linguist-generated=true diff=none
