@@ -49,7 +49,7 @@ export async function fetchWeather({ lat, lon }) {
   const url =
     `${ENDPOINT}?latitude=${lat}&longitude=${lon}` +
     `&current=${CURRENT_FIELDS}&daily=${DAILY_FIELDS}` +
-    `&timezone=Asia%2FShanghai&forecast_days=1`
+    '&timezone=Asia%2FShanghai&forecast_days=1'
 
   const raw = await getJson(url, { retries: 2, cacheTtl: 10 * 60 * 1000 })
   return normalizeWeather(raw)

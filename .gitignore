@@ -1,5 +1,9 @@
 node_modules/
 dist/
+
+# 本地校准用的一次性脚本，不进仓库
+scripts/_scratch-*.mjs
+scripts/_probe*.mjs
 .env
 .env.*
 !.env.example

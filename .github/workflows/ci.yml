@@ -26,6 +26,9 @@ jobs:
 
       - run: npm ci
 
+      - name: 代码风格与静态检查
+        run: npm run lint
+
       - name: 校验数据
         run: npm run validate:data
 
