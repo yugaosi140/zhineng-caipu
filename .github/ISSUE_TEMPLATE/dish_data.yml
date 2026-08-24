@@ -1,0 +1,102 @@
+name: 菜谱与数据修正
+description: 菜谱做法不对、食材用量不合理、地域归属有误、想补一道菜
+labels: ["data"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        菜谱数据在 `src/data/dishes.hubei.json`，地域代表菜在 `src/engine/region.js`，
+        菜价基准在 `src/data/priceBaseline.json`。
+        数据规则由 `npm run validate:data` 约束：难度 1–5 的整数，`properties` 七个维度都要在 0–1 之间，
+        `ingredients[].priceKey` 必须能在菜价基准里找到（没有对应价格就填 `null`）。
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: 这是哪一类
+      options:
+        - 现有菜谱的做法或步骤有误
+        - 食材用量不合理
+        - 地域归属不对（这道菜不属于这个市州）
+        - 餐段不对（早/午/晚）
+        - 口味或营养数值偏差较大
+        - 想新增一道湖北菜
+        - 菜价基准需要更新
+    validations:
+      required: true
+
+  - type: input
+    id: dish
+    attributes:
+      label: 菜名
+      description: 新增菜品也写在这里。
+      placeholder: 热干面
+    validations:
+      required: true
+
+  - type: dropdown
+    id: city
+    attributes:
+      label: 所属市州
+      options:
+        - 武汉
+        - 黄石
+        - 十堰
+        - 宜昌
+        - 襄阳
+        - 鄂州
+        - 荆门
+        - 孝感
+        - 荆州
+        - 黄冈
+        - 咸宁
+        - 随州
+        - 恩施
+        - 仙桃
+        - 潜江
+        - 天门
+        - 神农架
+        - 全省通行，不限市州
+    validations:
+      required: true
+
+  - type: dropdown
+    id: meals
+    attributes:
+      label: 餐段
+      multiple: true
+      options:
+        - 早餐
+        - 午餐
+        - 晚餐
+    validations:
+      required: true
+
+  - type: textarea
+    id: current
+    attributes:
+      label: 现在的数据是什么
+      description: 修正类问题请贴出当前 JSON 片段或截图；新增菜品可以留空。
+      render: json
+
+  - type: textarea
+    id: correct
+    attributes:
+      label: 正确的应该是什么
+      description: 用量请带单位和份数。新增菜品请尽量写全食材、步骤、难度和耗时。
+      placeholder: |
+        热干面（2 人份）：碱水面 300g、芝麻酱 40g、香油 10g、酸豆角 30g、葱花 10g、生抽 10g、醋 5g
+        现在这几项的用量都是 150g，芝麻酱和醋明显偏多。
+    validations:
+      required: true
+
+  - type: textarea
+    id: source
+    attributes:
+      label: 依据来源
+      description: |
+        地方志、餐馆做法、家里的做法、视频链接都算。写清楚出处比写得多更有用。
+        已有的公开检索记录在 `src/data/foodSources.hubei.json`。
+      placeholder: 家里的做法，武汉本地；另见 B 站 BV1Kc411J7Yi 对热干面配比的说明。
+    validations:
+      required: true

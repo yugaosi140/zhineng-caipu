@@ -1,0 +1,40 @@
+name: 文档问题
+description: 文档有误、缺失，或者读不懂
+title: "[Docs] "
+labels: ["documentation"]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: 文档位置
+      description: 文件路径、章节标题或链接。
+      placeholder: README.md · 本地运行
+    validations:
+      required: true
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: 问题类型
+      options:
+        - 内容有误
+        - 内容缺失
+        - 表述不清或有歧义
+        - 示例或命令跑不通
+        - 已过期，与代码不一致
+    validations:
+      required: true
+
+  - type: textarea
+    id: detail
+    attributes:
+      label: 具体说明
+      description: 哪一句有问题，你按文档做之后实际遇到了什么。
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: 建议改法
+      description: 有更准确的写法就直接写出来，可以直接被采纳。

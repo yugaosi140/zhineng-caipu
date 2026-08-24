@@ -1,0 +1,73 @@
+name: 缺陷报告
+description: 报告一个可复现的问题
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        提交前请先搜索已有 issue，确认问题没被报告过。
+        只是想问怎么用、或者不确定算不算缺陷，请走 Discussions。
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: 问题描述
+      description: 实际发生了什么，你预期是什么。两者都写清楚。
+      placeholder: |
+        实际：……
+        预期：……
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 从干净状态开始，一步一步到问题出现。
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: 版本
+      description: 版本号、commit hash 或分支名。
+      placeholder: v1.0.0 / d4f4573 / main
+    validations:
+      required: true
+
+  - type: input
+    id: env
+    attributes:
+      label: 运行环境
+      description: 操作系统、运行时版本，浏览器（如与界面相关）。
+      placeholder: Windows 11 / Node 22.19.0 / Chrome 127
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志与报错
+      description: 控制台输出或堆栈信息。这一栏会自动按代码块渲染，不用加反引号。
+      render: text
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: 补充信息
+      description: 截图、录屏、你已经排查过的方向，或者你怀疑的原因。
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 确认项
+      options:
+        - label: 我已搜索过已有 issue，没有重复
+          required: true
+        - label: 我在最新版本上确认过这个问题仍然存在

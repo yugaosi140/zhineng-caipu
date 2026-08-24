@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 使用提问与想法讨论
+    url: https://github.com/yugaosi140/zhineng-caipu/discussions
+    about: 不确定是不是缺陷、想聊聊思路，或者只是想问怎么用，先来这里。
+  - name: 安全问题
+    url: https://github.com/yugaosi140/zhineng-caipu/security/advisories/new
+    about: 安全相关问题请走私密报告渠道，不要开公开 issue。
