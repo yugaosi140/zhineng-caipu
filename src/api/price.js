@@ -21,8 +21,17 @@
 import { getJson, postJson } from './http.js'
 import baseline from '../data/priceBaseline.json'
 
-/** 走 Vite 代理（浏览器不能直连：CORS + WAF 校验 UA/Referer）。 */
-const BASE = '/pfsc'
+/**
+ * 接口前缀。浏览器不能直连 pfsc.agri.cn（CORS + WAF 校验 UA/Referer），
+ * 必须有一层同源转发。
+ *
+ * 开发环境由 vite.config.js 的 server.proxy 提供，默认前缀 `/pfsc` 即可。
+ * 生产环境这层代理不存在（静态产物里没有 dev server），得自己在托管前面放
+ * 反向代理，再用 VITE_PFSC_BASE 指过去。配置样例见 deploy/README.md。
+ *
+ * 没配也不会坏：请求全失败 → loadPrices 降级到 baseline 兜底价。
+ */
+const BASE = import.meta.env?.VITE_PFSC_BASE || '/pfsc'
 
 const INDEX_URL = `${BASE}/price_portal/pi-info-day/getPortalPiInfoDay`
 const DAILY_URL = `${BASE}/api/FarmDaily/list?page=1&limit=1`

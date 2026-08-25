@@ -1,0 +1,60 @@
+name: 部署到 GitHub Pages
+
+# 手动触发为主。Pages 上没有反向代理，菜价只会落 baseline 兜底价，
+# 这份部署适合展示界面和推荐逻辑，不适合当真实菜价来源 —— 详见 deploy/README.md。
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同时只跑一个部署，新的推送取消排队中的旧任务
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      # 部署前先过一遍检查，别把坏的构建发上去
+      - name: 校验数据
+        run: npm run validate:data
+
+      - name: 单元测试
+        run: npm test
+
+      - name: 生产构建
+        run: npm run build
+        env:
+          # 项目页的地址是 /<仓库名>/，不设 base 会导致资源 404
+          BUILD_BASE: /${{ github.event.repository.name }}/
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

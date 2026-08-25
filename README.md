@@ -52,7 +52,7 @@ npm run dev
 
 所以每个价格都带 provenance 标签：`manual`（你自己填的）> `live`（简报真实价）> `index-adjusted`（基线 × 今日指数/基线日指数）> `baseline`（静态兜底）。**显示出来的多数价格是全国指数折算的估算值，不是湖北本地批发价。** 界面上提供手工改价，填你在菜场看到的真实价会覆盖估算值并存进 localStorage。
 
-**部署注意：** 菜价接口靠 Vite 的开发代理转发（浏览器直连会被 CORS 和 WAF 拦）。`npm run build` 出来的静态产物没有这层代理，直接扔到静态托管上菜价会拉不到，只会落到 baseline 兜底。要在生产环境拿到菜价，得自己在前面放一层反向代理，把 `/pfsc` 转到 `https://pfsc.agri.cn`。
+**部署注意：** 菜价接口靠 Vite 的开发代理转发（浏览器直连会被 CORS 和 WAF 拦）。`npm run build` 出来的静态产物没有这层代理，直接扔到静态托管上菜价会拉不到，只会落到 baseline 兜底 —— 界面不会坏，但价格是静态的。要在生产拿到菜价，得在托管前面放一层反向代理把 `/pfsc` 转到 `https://pfsc.agri.cn`，Nginx / Caddy / Netlify / Cloudflare Workers 的现成配置见 [deploy/README.md](deploy/README.md)。代理挂在非默认路径时用 `VITE_PFSC_BASE` 指过去（见 [.env.example](.env.example)）。
 
 ## 项目结构
 
