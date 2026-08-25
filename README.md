@@ -1,5 +1,9 @@
 # 楚膳
 
+[![CI](https://github.com/yugaosi140/zhineng-caipu/actions/workflows/ci.yml/badge.svg)](https://github.com/yugaosi140/zhineng-caipu/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Node](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](https://nodejs.org)
+
 湖北地域化的智能三餐推荐。根据实时天气、湿度、风力、海拔、时令、预算和菜谱难度，生成早、中、晚三餐建议，并给出「为什么推荐这道菜」的可解释理由。
 
 - 83 道湖北菜谱，覆盖 17 个市州/直管市/林区

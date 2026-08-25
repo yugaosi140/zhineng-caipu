@@ -1,0 +1,38 @@
+version: 2
+
+updates:
+  # npm 依赖。分组是关键：不分组的话每个包一个 PR，
+  # 光 eslint 那几个插件就能一周开五个，评审全花在点 merge 上。
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 5
+    groups:
+      # 补丁和小版本合成一个 PR —— 这类升级读 changelog 的价值低于逐个评审的成本
+      minor-and-patch:
+        patterns: ['*']
+        update-types: ['minor', 'patch']
+      # 构建链条一起升。vite 和它的 vue 插件版本是配套的，分开升会撕裂
+      build-toolchain:
+        patterns: ['vite', '@vitejs/*', 'vitest']
+      lint-toolchain:
+        patterns: ['eslint', '@eslint/*', 'eslint-plugin-*', '@stylistic/*']
+    commit-message:
+      prefix: 依赖
+    labels:
+      - 依赖升级
+
+  # CI 里的 action 也会过期，actions/checkout@v4 这种如果一直不升，
+  # 某天 GitHub 停用旧版 Node runtime 时会突然全线红掉
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ['*']
+    commit-message:
+      prefix: CI
+    labels:
+      - 依赖升级
